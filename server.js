@@ -1,6 +1,12 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const passport = require('passport');
+
+// Router
+const { usersRouter, profileRouter, postsRouter } = require('./routes/api');
+// Config
+const { passportConfig } = require('./configs');
 
 const app = express();
 
@@ -13,16 +19,17 @@ mongoose
   .catch(() => console.log('db connect with error'));
 
 /**
- * Routers
- */
-const { usersRouter, profileRouter, postsRouter } = require('./routes/api');
-
-/**
  * Middleware
  */
 if (app.get('env') === 'development') {
   app.use(morgan('tiny'));
 }
+
+/**
+ * Passport
+ */
+app.use(passport.initialize());
+passportConfig(passport);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
