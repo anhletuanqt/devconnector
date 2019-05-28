@@ -16,7 +16,6 @@ router.post(
   async (req, res) => {
     let post = req.body;
     post.user = req.user._id;
-    console.log(typeof post.user);
     const { error } = validatePost(post);
 
     if (error) {
@@ -26,7 +25,6 @@ router.post(
     try {
       post = new Post(post);
       post = await post.save();
-
       res.send(post);
     } catch (error) {
       res.status(404).send(error);
@@ -39,7 +37,7 @@ router.post(
  */
 router.get('/', async (req, res) => {
   try {
-    const posts = await Post.find();
+    const posts = await Post.find().populate('user', 'name email avatar');
 
     res.send(posts);
   } catch (error) {
@@ -54,7 +52,9 @@ router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-    const posts = await Post.findById(id);
+    const posts = await Post.findById(id)
+      .populate('user', '_id name email')
+      .populate('comment.user', '_id name email');
 
     res.send(posts);
   } catch (error) {

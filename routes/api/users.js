@@ -17,13 +17,17 @@ router.post('/register', async (req, res) => {
   const { error } = validateUser(req.body);
 
   if (error) {
-    return res.status(400).send(error.details[0].message);
-  }
+    const errors = {};
+    error.details.forEach(e => {
+      errors[e.path] = e.message;
+    });
 
+    return res.status(400).send(errors);
+  }
   try {
     let user = await findUserByEmail(email);
     if (user) {
-      res.status(400).send({ msg: 'Email already exist' });
+      return res.status(400).send({ msg: 'Email already exist' });
     }
 
     const avatar = gravatar.url(email, { s: '80', r: 'pg', d: '404' });
@@ -37,7 +41,6 @@ router.post('/register', async (req, res) => {
     await user.save();
     res.send(_.pick(user, ['_id', 'name', 'email', 'date']));
   } catch (error) {
-    console.log(error);
     res.status(400).send(error);
   }
 });
@@ -50,20 +53,25 @@ router.post('/login', async (req, res) => {
   const { error } = validateLogin(req.body);
 
   if (error) {
-    return res.status(400).send(error.details[0].message);
+    const errors = {};
+    error.details.forEach(e => {
+      errors[e.path] = e.message;
+    });
+
+    return res.status(400).send(errors);
   }
 
   try {
     const user = await findUserByEmail(email);
 
     if (!user) {
-      return res.send('User not found');
+      return res.status(400).send({ email: 'email not found' });
     }
 
     const isMatchPassword = await user.comparePassword(password);
 
     if (!isMatchPassword) {
-      return res.send('Password incorrect');
+      return res.status(400).send({ password: 'Password incorrect' });
     }
 
     return res.send({ token: `Bearer ${user.generateToken()}` });

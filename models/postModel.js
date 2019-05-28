@@ -48,9 +48,19 @@ const PostSchema = new Schema({
     }
   ],
   date: {
-    type: String,
+    type: Date,
     default: Date.now
   }
+});
+
+PostSchema.post('save', async function(doc) {
+  await doc
+    .populate('user', '_id name email')
+    .populate({
+      path: 'comment.user',
+      select: '_id name email'
+    })
+    .execPopulate();
 });
 
 const Post = mongoose.model('Post', PostSchema);

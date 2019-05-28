@@ -1,0 +1,23 @@
+.landing {
+  background-image: url('../img/showcase.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 88vh;
+  position: relative;
+
+  .dark-overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+}

@@ -48,15 +48,17 @@ UserSchema.pre('save', async function(next) {
  */
 UserSchema.methods.generateToken = function() {
   const user = this;
-  const { _id, email, name, date } = user;
+  const { _id, email, name, date, avatar } = user;
   return jwt.sign(
     {
       _id,
       name,
       email,
+      avatar,
       date
     },
-    'MERN'
+    'MERN',
+    { expiresIn: '1h' }
   );
 };
 

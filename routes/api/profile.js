@@ -106,7 +106,12 @@ router.post(
       const { error } = validateExperience(req.body);
 
       if (error) {
-        return res.status(400).send(error.details[0].message);
+        const errors = {};
+        error.details.forEach(err => {
+          errors[err.path] = err.message;
+        });
+
+        return res.status(400).send(errors);
       }
 
       profile.experience.unshift(req.body);
@@ -164,7 +169,12 @@ router.post(
       const { error } = validateEducation(req.body);
 
       if (error) {
-        return res.status(400).send(error.details[0].message);
+        const errors = {};
+        error.details.forEach(err => {
+          errors[err.path] = err.message;
+        });
+
+        return res.status(400).send(errors);
       }
 
       profile.education.unshift(req.body);
@@ -215,10 +225,16 @@ router.post(
     // Validate body
     const profileFields = req.body;
     profileFields.user = req.user;
+    profileFields.skills = req.body.skills && req.body.skills.split(',');
     const { error } = validateProfile(profileFields);
 
     if (error) {
-      return res.status(400).send(error.details[0].message);
+      const errors = {};
+      error.details.map(err => {
+        errors[err.path] = err.message;
+      });
+
+      return res.status(400).send(errors);
     }
 
     try {

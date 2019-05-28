@@ -2,14 +2,14 @@ const Joi = require('joi');
 
 function validateUser(user) {
   const schema = {
-    name: Joi.required(),
+    name: Joi.string().required(),
     email: Joi.string()
       .email()
       .required(),
-    password: Joi.required()
+    password: Joi.string().required()
   };
 
-  return Joi.validate(user, schema);
+  return Joi.validate(user, schema, { abortEarly: false });
 }
 
 function validateLogin(user) {
@@ -20,7 +20,7 @@ function validateLogin(user) {
     password: Joi.string().required()
   };
 
-  return Joi.validate(user, schema);
+  return Joi.validate(user, schema, { abortEarly: false });
 }
 
 function validateProfile(profile) {
@@ -41,7 +41,7 @@ function validateProfile(profile) {
     })
   };
 
-  return Joi.validate(profile, schema);
+  return Joi.validate(profile, schema, { abortEarly: false });
 }
 
 function validateExperience(exp) {
@@ -55,7 +55,7 @@ function validateExperience(exp) {
     description: Joi.string()
   };
 
-  return Joi.validate(exp, schema);
+  return Joi.validate(exp, schema, { abortEarly: false });
 }
 
 function validateEducation(edu) {
@@ -69,7 +69,7 @@ function validateEducation(edu) {
     description: Joi.string()
   };
 
-  return Joi.validate(edu, schema);
+  return Joi.validate(edu, schema, { abortEarly: false });
 }
 
 function validatePost(post) {
@@ -81,7 +81,7 @@ function validatePost(post) {
     date: Joi.date()
   };
 
-  return Joi.validate(post, schema);
+  return Joi.validate(post, schema, { abortEarly: false });
 }
 
 function validateComment(comment) {
@@ -93,7 +93,7 @@ function validateComment(comment) {
     date: Joi.date()
   };
 
-  return Joi.validate(comment, schema);
+  return Joi.validate(comment, schema, { abortEarly: false });
 }
 
 module.exports = {
